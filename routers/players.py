@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from schemas.player import PlayerCreate, PlayerUpdate, PlayerResponse
-import services.player as service
+import services.players as service
 
 router = APIRouter(prefix="/players", tags=["players"])
 

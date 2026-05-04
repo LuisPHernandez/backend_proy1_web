@@ -1,4 +1,49 @@
+# Variables de entorno
 .env
+.env.*
+!.env.example
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+ENV/
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.coverage.*
+.cache/
+
+# Logs
+*.log
+logs/
+
+# Archivos subidos por usuarios
 uploads/*
 !uploads/.gitkeep
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker local opcional
+docker-compose.override.yml
+
+# Alembic si genera cache
+alembic/versions/__pycache__/

@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.exc import SQLAlchemyError
 import os
 from dotenv import load_dotenv
 
@@ -13,7 +14,11 @@ db = os.getenv('DB_NAME')
 
 DATABASE_URL = f"postgresql://{user}:{password}@{host}:{port}/{db}"
 
-engine = create_engine(DATABASE_URL)
+try:
+    engine = create_engine(DATABASE_URL)
+except Exception as e:
+    raise RuntimeError(f"No se pudo crear el engine de base de datos: {e}")
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -27,9 +32,11 @@ def get_db():
     Yields:
         Session: Sesión de base de datos de SQLAlchemy.
     """
-    db = SessionLocal()
+    session = SessionLocal()
     try:
-        yield db
+        yield session
+    except SQLAlchemyError as e:
+        session.rollback()
+        raise RuntimeError(f"Error en la sesión de base de datos: {e}")
     finally:
-        # Asegura que la sesión se cierre al terminar la petición
-        db.close()
+        session.close()

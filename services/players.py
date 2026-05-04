@@ -6,7 +6,7 @@ from psycopg2 import DatabaseError
 
 from models.player import Player
 from schemas.player import PlayerCreate, PlayerUpdate
-import repositories.player as repo
+import repositories.players as repo
 
 UPLOAD_DIR = "uploads"
 ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp"}
