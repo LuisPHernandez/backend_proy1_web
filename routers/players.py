@@ -17,7 +17,7 @@ router = APIRouter(prefix="/players", tags=["players"])
 )
 def get_players(
     page: int = 1,
-    limit: int = 10,
+    limit: int = 12,
     q: Optional[str] = None,
     sort: Optional[str] = None,
     order: str = "asc",
