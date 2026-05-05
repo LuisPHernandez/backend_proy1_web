@@ -11,6 +11,7 @@ import repositories.players as repo
 UPLOAD_DIR = "uploads"
 ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp"}
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+MAX_IMAGE_SIZE = 1 * 1024 * 1024  # 1 MB
 
 def get_all(db: Session, page: int, limit: int, q: str, sort: str, order: str) -> list[Player]:
     """
@@ -146,6 +147,7 @@ def upload_image(db: Session, player_id: int, file: UploadFile) -> Player:
         
     Raises:
         HTTPException: Si el tipo de archivo no es permitido (400).
+        HTTPException: Si el tamaño del archivo excede el límite (400).
         HTTPException: Si el jugador no se encuentra (404).
         HTTPException: Si no se puede guardar la imagen (500).
         HTTPException: Si ocurre un error en la base de datos (500).
@@ -170,8 +172,17 @@ def upload_image(db: Session, player_id: int, file: UploadFile) -> Player:
     image_url = f"/uploads/{filename}"
 
     try:
+        content = file.file.read()
+
+        if len(content) > MAX_IMAGE_SIZE:
+            raise HTTPException(
+                status_code=400,
+                detail="La imagen no puede pesar más de 1 MB"
+            )
+
         with open(file_path, "wb") as f:
-            f.write(file.file.read())
+            f.write(content)
+            
         old_image_url = player.image_url
         updated_player = repo.update_image_url(db, player, image_url)
         _delete_image_file(old_image_url)
