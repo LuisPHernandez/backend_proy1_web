@@ -2,7 +2,7 @@
 
 Backend del Proyecto 2 de Web. Esta API REST permite administrar jugadores de la NBA y guardar la informacion en una base de datos PostgreSQL. El servidor solo responde JSON y no genera HTML; el frontend se comunica con este backend usando `fetch()`.
 
-Repositorio del frontend: <https://github.com/LuisPHernandez/frontend_proy2_web>
+Repositorio del frontend: <https://github.com/LuisPHernandez/frontend_proy1_web>
 
 ## Tecnologias usadas
 
