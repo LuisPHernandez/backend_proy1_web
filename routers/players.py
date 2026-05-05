@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, UploadFile, File
 from sqlalchemy.orm import Session
 
@@ -14,20 +15,32 @@ router = APIRouter(prefix="/players", tags=["players"])
     summary="Obtiene todos los jugadores",
     description="Retorna una lista de todos los jugadores registrados en la base de datos"
 )
-def get_players(db: Session = Depends(get_db)):
+def get_players(
+    page: int = 1,
+    limit: int = 10,
+    q: Optional[str] = None,
+    sort: Optional[str] = None,
+    order: str = "asc",
+    db: Session = Depends(get_db)
+    ):
     """
-    Retorna una lista de todos los jugadores registrados en la base de datos.
+    Retorna una lista de todos los jugadores registrados en la base de datos. 
     
     Args:
         db (Session): Sesión de base de datos.
-        
+        page (int): Número de página.
+        limit (int): Límite de jugadores por página.
+        q (Optional[str]): Query de búsqueda.
+        sort (Optional[str]): Campo de ordenamiento.
+        order (str): Orden de ordenamiento (asc o desc).
+
     Returns:
         list[PlayerResponse]: Lista de jugadores registrados.
 
     Raises:
         HTTPException: Si ocurre un error en la base de datos (500).
     """
-    return service.get_all(db)
+    return service.get_all(db, page, limit, q, sort, order)
 
 @router.get(
     "/{player_id}", 

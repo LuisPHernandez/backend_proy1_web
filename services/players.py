@@ -12,12 +12,17 @@ UPLOAD_DIR = "uploads"
 ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp"}
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-def get_all(db: Session) -> list[Player]:
+def get_all(db: Session, page: int, limit: int, q: str, sort: str, order: str) -> list[Player]:
     """
     Obtiene todos los jugadores registrados en la base de datos.
     
     Args:
         db (Session): Sesión de base de datos.
+        page (int): Número de página.
+        limit (int): Límite de jugadores por página.
+        q (str): Query de búsqueda.
+        sort (str): Campo de ordenamiento.
+        order (str): Orden de ordenamiento (asc o desc).
         
     Returns:
         list[Player]: Lista de jugadores registrados.
@@ -26,7 +31,7 @@ def get_all(db: Session) -> list[Player]:
         HTTPException: Si ocurre un error en la base de datos (500).
     """
     try:
-        return repo.get_all(db)
+        return repo.get_all(db, page, limit, q, sort, order)
     except DatabaseError:
         raise HTTPException(
             status_code=500,

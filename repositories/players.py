@@ -1,11 +1,21 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import asc, desc
 from fastapi import HTTPException
 
 from models.player import Player
 from schemas.player import PlayerCreate, PlayerUpdate
 
-def get_all(db: Session) -> list[Player]:
+SORTABLE_FIELDS = {
+    "name":              Player.name,
+    "age":               Player.age,
+    "points_per_game":   Player.points_per_game,
+    "assists_per_game":  Player.assists_per_game,
+    "rebounds_per_game": Player.rebounds_per_game,
+    "jersey_number":     Player.jersey_number,
+}
+
+def get_all(db: Session, page: int, limit: int, q: str, sort: str, order: str) -> list[Player]:
     """
     Obtiene todos los jugadores registrados en la base de datos.
     
@@ -19,7 +29,18 @@ def get_all(db: Session) -> list[Player]:
         HTTPException: Si ocurre un error en la base de datos (500).
     """
     try:
-        return db.query(Player).all()
+        query = db.query(Player)
+
+        if q:
+            query = query.filter(Player.name.ilike(f"%{q}%"))
+
+        if sort and sort in SORTABLE_FIELDS:
+            column = SORTABLE_FIELDS[sort]
+            query = query.order_by(asc(column) if order == "asc" else desc(column))
+
+        offset = (page - 1) * limit
+        return query.offset(offset).limit(limit).all()
+
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"Error de base de datos: {str(e)}")
 
