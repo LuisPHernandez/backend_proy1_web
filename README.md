@@ -4,6 +4,9 @@ Backend del Proyecto 2 de Web. Esta API REST permite administrar jugadores de la
 
 Repositorio del frontend: <https://github.com/LuisPHernandez/frontend_proy1_web>
 
+Link al backend corriendo en el servidor remoto: <http://34.51.81.158:8000>
+Link al frontend corriendo en el servidor remoto: http://34.51.81.158/proyecto1/
+
 ## Tecnologias usadas
 
 - Python 3.12
